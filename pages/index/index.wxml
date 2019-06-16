@@ -1,0 +1,53 @@
+<view>
+  <!-- 顶部 -->
+  <view class='top-view'>
+    <view class='top-left'>
+      <image src='../../images/phone-icon.png'></image>
+      <text>iphone X</text>
+      <text class='separate'> | </text>
+      <view class='edit'>
+        <text>修改</text>
+        <image src='../../images/next.png'></image>
+      </view>
+    </view>
+    <view class='top-right'>
+      <text>下一步</text>
+      <text>选择规格</text>
+    </view>
+  </view>
+
+  <view class='contentWarp'>
+    <!-- *************操作区域*************  -->
+    <block wx:for="{{itemList}}" wx:key="{{item.id}}">
+      <!-- 圆心坐标 <text style='position:absolute;top:{{item.y}}px;left:{{item.x}}px;width:2px;height:2px;background-color:yellow;z-index:500'></text> -->
+      <view class='touchWrap' style='transform: scale({{item.scale}});top:{{item.top}}px;left:{{item.left}}px; '>
+        <view class='imgWrap {{item.active? "touchActive":""}}' style="transform: rotate({{item.angle}}deg); border: {{item.active?4*item.oScale:0}}rpx #fff dashed;">
+          <image src='{{item.image}}' data-id='{{item.id}}' style='width:{{item.width}}px;height:{{item.height}}px;' bindtouchstart='WraptouchStart' bindtouchmove='WraptouchMove' bindtouchend='WraptouchEnd'></image>
+          <image class='x' src='../../images/x.png' style='transform: scale({{item.oScale}});transform-origin:center;' data-id='{{item.id}}' bindtap='deleteItem'></image>
+          <image class='o' src='../../images/o.png' style='transform: scale({{item.oScale}});transform-origin:center;' data-id='{{item.id}}' bindtouchstart='oTouchStart' bindtouchmove='oTouchMove'></image>
+        </view>
+      </view>
+    </block>
+    <!-- **************操作区域************  -->
+  </view>
+
+  <scroll-view class="scroll-view_H" scroll-x style="width: 100%">
+    <view id="green" class="scroll-view-item"></view>
+    <view id="red"  class="scroll-view-item"></view>
+    <view id="yellow" class="scroll-view-item"></view>
+    <view id="blue" class="scroll-view-item"></view>
+  </scroll-view>
+
+  <!-- <view class="swiper-tab">
+    <view class="swiper-tab-list {{currentTab==0 ? 'on' : ''}}" data-current="0" bindtap="swichNav">主页</view>
+    <view class="swiper-tab-list {{currentTab==1 ? 'on' : ''}}" data-current="1" bindtap="swichNav">功能</view>
+  </view>
+  <swiper current="{{currentTab}}" class="swiper-box" duration="300" style="height:{{winHeight - 31}}px" bindchange="bindChange">
+    <swiper-item>
+      <view>主页</view>
+    </swiper-item>
+    <swiper-item>
+      <view>功能</view>
+    </swiper-item>
+  </swiper> -->
+</view>
