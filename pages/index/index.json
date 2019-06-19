@@ -1,5 +1,8 @@
 {
   "usingComponents": {},
   "disableScroll":true,
-  "disableSwipeBack":true
+  "disableSwipeBack":true,
+  "usingComponents": {
+    "canvas-drag": "/components/canvas-drag/index"
+  }
 }
