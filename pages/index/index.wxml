@@ -10,53 +10,57 @@
         <image src='../../images/next.png'></image>
       </view>
     </view>
-    <view class='top-right'>
+    <view class='top-right' bindtap='onExport'>
       <text>下一步</text>
       <text>选择规格</text>
     </view>
   </view>
 
   <view class='canvas-view'>
-    <canvas-drag id="canvas-drag" graph="{{graph}}" width='{{width}}' height='{{height}}'></canvas-drag>
+    <canvas-drag id="canvas-drag" graph="{{graph}}" width='750' height='770'></canvas-drag>
     <image src='{{camera}}' class='camera' top='{{top}}' left='{{left}}' width='{{cameraW}}' height='{{cameraH}}'></image>
   </view>
 
-  <scroll-view class="scroll-view_H" scroll-x style="width: 100%">
-    <view class="scroll-view-item">
-      <image src='../../images/upImg.png' bindtap='onAddImage' class='add'></image>
-    </view>
-    <view class="scroll-view-item" wx:for="{{addImgList}}">
-      <image src='{{item.url}}' class='imgItem'></image>
-      <image src='../../images/x.png' class='del'></image>
-    </view>
-  </scroll-view>
-
-  <view class='container'>
-    <!--Tab布局-->
-    <view class='title'>
-      <view class='titleSel' bindtap='titleClick' data-idx='0'>
-        <text>第一个选项</text>
-        <hr class="{{0 == currentIndex ? 'headerLineSel' : 'headerLineUnsel'}}" />
-      </view>
-
-      <view class='titleSel' bindtap='titleClick' data-idx='1'>
-        <text>第二个选项</text>
-        <hr class="{{1 == currentIndex ? 'headerLineSel' : 'headerLineUnsel'}} " />
-      </view>
-    </view>
-
-    <!--内容布局-->
-    <swiper class='swiper' bindchange='pagechange' current='{{currentIndex}}'>
-      <swiper-item class='swiper'>
-        <view wx:for="{{firstList}}" class='recordItem'>
-          <view class='name'>昵称：{{item}}</view>
+  <!-- 内容 -->
+  <view class="content">
+    <view wx:if="{{activeIndex == 0}}">
+      <scroll-view class="scroll-view_H" scroll-x style="width: 94%">
+        <view class="scroll-view-item">
+          <image src='../../images/upImg.png' class='add' bindtap="showModal"></image>
         </view>
-      </swiper-item>
-      <swiper-item class='swiper' class='swiper'>
-        <view wx:for="{{secondList}}" class='recordItem'>
-          <view class='name'>昵称：{{item}}</view>
+        <view class="scroll-view-item" wx:for="{{addImgList}}">
+          <image src='{{item.url}}' class='imgItem'></image>
+          <image src='../../images/x.png' class='del' data-index="{{index}}" bindtap='delImg'></image>
         </view>
-      </swiper-item>
-    </swiper>
+      </scroll-view>
+    </view>
+    <view wx:if="{{activeIndex == 1}}">
+      <scroll-view class="scroll-view_H2" scroll-x style="width: 94%">
+        <view class='font-item' wx:for="{{fontList}}">
+          <text style='font-family:{{item.fontFamily}}' data-font="{{item.fontFamily}}" bindtap='changeFont'>{{item.text}}</text>
+        </view>
+      </scroll-view>
+      <view class='textIn'>
+        <input type='text' placeholder="请输入文字" bindblur="getText" />
+        <button mini bindtap='onAddText'>添加</button>
+      </view>
+    </view>
   </view>
+
+  <!-- 选项栏 -->
+  <view class="title">
+    <view wx:for="{{list}}" wx:key="index" class="list_item {{activeIndex == index ? 'on2' : ''}}" bindtap='tabClick' data-index="{{index}}">{{item}}
+    </view>
+  </view>
+
+  <!-- 弹框 -->
+
+  <view class="modals modals-bottom-dialog" hidden="{{hideModal}}">
+    <view class="modals-cancel" bindtap="hideModal"></view>
+    <view class="bottom-dialog-body bottom-pos" animation="{{animationData}}">
+      <view bindtap='onAddImage' class='m-li'>上传图片</view>
+      <view class='m-li' bindtap='toList'>选择模板</view>
+    </view>
+  </view>
+
 </view>

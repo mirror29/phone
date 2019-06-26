@@ -1,0 +1,13 @@
+.list-con{
+  display: flex;
+  flex-wrap: wrap;
+}
+.list-li {
+  width: 23%;
+  margin: 6rpx;
+}
+.list-li image{
+  width: 100%;
+  height: 160rpx;
+  border-radius: 10rpx;
+}

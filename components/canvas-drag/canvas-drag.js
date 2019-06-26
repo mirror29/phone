@@ -53,6 +53,24 @@ CanvasDrag.changFontColor = (color) => {
     }
 };
 
+CanvasDrag.changFont = (font) => {
+  const canvasDrag = CanvasDrag();
+  if (!canvasDrag) {
+    console.error('请设置组件的id="canvas-drag"!!!');
+  } else {
+    return CanvasDrag().changFont(font);
+  }
+};
+
+CanvasDrag.delItem = (index) => {
+  const canvasDrag = CanvasDrag();
+  if (!canvasDrag) {
+    console.error('请设置组件的id="canvas-drag"!!!');
+  } else {
+    return CanvasDrag().delItem(index);
+  }
+};
+
 CanvasDrag.changeBgColor = (color) => {
     const canvasDrag = CanvasDrag();
     if (!canvasDrag) {

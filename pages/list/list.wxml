@@ -1,0 +1,10 @@
+<view>
+  <view class='list-con'>
+    <view class='list-li'>
+      <image src='../../images/upImg.png' bindtap='onAddImage' class='add'></image>
+    </view>
+    <view class='list-li' wx:for="{{imgList}}">
+      <image src="{{item}}" data-index="{{index}}" bindtap='chooseImg'></image>
+    </view>
+  </view>
+</view>

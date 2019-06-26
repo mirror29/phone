@@ -160,51 +160,62 @@
 .swiper-box view {
   text-align: center;
 }
-.canvas-view{
+
+.canvas-view {
   padding-top: 40rpx;
   width: 375rpx;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  text-align: center;
   position: relative;
 }
 
-.camera{
+.camera {
   position: absolute;
   top: 80rpx;
-  left: 40rpx;
+  left: 240rpx;
   width: 55rpx;
   height: 120rpx;
   z-index: 999;
 }
 
-.scroll-view_H{
+.scroll-view_H {
   position: fixed;
-  bottom: 140rpx;
+  bottom: 160rpx;
   background-color: #fff;
   display: flex;
-  white-space: nowrap; 
+  white-space: nowrap;
   margin: 0 10rpx;
   padding: 10rpx;
 }
 
-.scroll-view-item{
+.scroll-view_H2 {
+  display: flex;
+  white-space: nowrap;
+  margin: 0 10rpx;
+  padding: 10rpx;
+}
+
+.scroll-view-item {
   display: inline-block;
   /* background-color: #fff; */
   margin: 0 10rpx;
   position: relative;
   padding-top: 18rpx;
 }
-.scroll-view-item .imgItem{
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 5px;
-}
-.scroll-view-item .add{
+
+.scroll-view-item .imgItem {
   width: 120rpx;
   height: 120rpx;
   border-radius: 5px;
 }
 
-.del{
+.scroll-view-item .add {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 5px;
+}
+
+.del {
   position: absolute;
   right: -8rpx;
   top: 2rpx;
@@ -227,6 +238,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+  z-index: 999;
 }
 
 .titleSel {
@@ -261,7 +273,7 @@
 .swiper {
   width: 100%;
   flex: 1;
-  height:100vh;
+  height: 100vh;
   overflow: scroll;
 }
 
@@ -270,4 +282,97 @@
   background-color: white;
   padding-bottom: 20rpx;
   padding-top: 20rpx;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  bottom: 10rpx;
+  left: 0;
+  right: 0;
+}
+
+.list_item {
+  flex-grow: 1;
+  box-sizing: border-box;
+  height: 85rpx;
+  font-size: 32rpx;
+  text-align: center;
+  line-height: 85rpx;
+}
+
+.on2 {
+  color: #f16d30;
+}
+
+.textIn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.textIn input {
+  border: 1px solid #efefef;
+  border-radius: 10rpx;
+  font-size: 30rpx;
+  padding: 8rpx 4rpx;
+}
+
+.textIn button {
+  margin: 4rpx;
+  font-size: 28rpx;
+  text-align: center;
+  background-color: #f16d30;
+  color: #fff;
+}
+
+.font-item {
+  display: inline-block;
+  margin: 8rpx;
+}
+
+/*模态框*/
+
+.modals {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.modals-cancel {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bottom-dialog-body {
+  position: absolute;
+  z-index: 10001;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30rpx;
+  height: 300rpx;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-around;
+}
+.m-li{
+  margin-top: 100upx;
+  width: 240upx;
+}
+
+/*动画前初始位置*/
+
+.bottom-pos {
+  -webkit-transform: translateY(100%);
+  transform: translateY(100%);
 }
