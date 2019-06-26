@@ -1,6 +1,6 @@
 /* components/canvas-drag/index.wxss */
 .movable-label {
-    margin-top: 300rpx;
+  margin-top: 300rpx;
   width: 750rpx;
   height: 400rpx;
   background: #eee;

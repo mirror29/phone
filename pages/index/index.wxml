@@ -17,8 +17,8 @@
   </view>
 
   <view class='canvas-view'>
-    <canvas-drag id="canvas-drag" graph="{{graph}}" width='750' height='770'></canvas-drag>
-    <image src='{{camera}}' class='camera' top='{{top}}' left='{{left}}' width='{{cameraW}}' height='{{cameraH}}'></image>
+    <canvas-drag id="canvas-drag" graph="{{graph}}" width='600' height='790'></canvas-drag>
+    <image src='{{camera}}' class='camera' width='{{cameraW}}' height='{{cameraH}}'></image>
   </view>
 
   <!-- 内容 -->

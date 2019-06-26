@@ -164,7 +164,7 @@
 .canvas-view {
   padding-top: 40rpx;
   width: 375rpx;
-  /* margin: 0 auto; */
+  margin: 0 auto;
   text-align: center;
   position: relative;
 }
@@ -172,7 +172,7 @@
 .camera {
   position: absolute;
   top: 80rpx;
-  left: 240rpx;
+  left: 50rpx;
   width: 55rpx;
   height: 120rpx;
   z-index: 999;
@@ -180,7 +180,7 @@
 
 .scroll-view_H {
   position: fixed;
-  bottom: 160rpx;
+  bottom: 120rpx;
   background-color: #fff;
   display: flex;
   white-space: nowrap;

@@ -4,6 +4,7 @@ const DRAG_ICON = './icon/scale.png'; // 缩放按钮
 const STROKE_COLOR = 'red';
 const ROTATE_ENABLED = true;
 let source = "source-atop";
+let alpha = 1; //透明度
 
 const DEBUG_MODE = false; // 打开调试后会渲染操作区域边框（无背景时有效）
 const dragGraph = function({
@@ -69,6 +70,7 @@ dragGraph.prototype = {
   paint() {
     this.ctx.save();
     this.ctx.globalCompositeOperation = source;
+    this.ctx.setGlobalAlpha(alpha)
     // 由于measureText获取文字宽度依赖于样式，所以如果是文字元素需要先设置样式
     let textWidth = 0;
     let textHeight = 0;
@@ -193,6 +195,7 @@ dragGraph.prototype = {
     
     // 不在选择区域里面
     source = "source-atop";
+    alpha = 1;
     // console.log('未选中')
     return false;
   },
@@ -417,7 +420,7 @@ Component({
     },
     draw() {
       if (this.data.bgImage !== '') {
-        this.ctx.drawImage(this.data.bgImage, 100, 0, 191, 384);
+        this.ctx.drawImage(this.data.bgImage, 5, 0, 191, 384);
       }
       if (this.data.bgColor !== '') {
         this.ctx.save();
@@ -507,6 +510,7 @@ Component({
         }
         // 更新4个坐标点（相对于画布的坐标系）
         currentGraph._rotateSquare();
+        alpha = 0.7;
         source = "source-over";
         // console.log('移动')
 

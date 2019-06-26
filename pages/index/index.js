@@ -53,6 +53,10 @@ Page({
               // console.log(res2)
               let height = res2.height
               let width = res2.width
+              let json = {}
+              json.url = options.imgUrl;
+              _this.data.addImgList.unshift(json);
+              // console.log(addImgList)
               _this.setData({
                 width: res.width * 2,
                 height: res.height * 2,
@@ -61,7 +65,8 @@ Page({
                   h: height,
                   type: 'image',
                   url: options.imgUrl,
-                }
+                },
+                addImgList: _this.data.addImgList
               })
             }
           })
@@ -97,7 +102,7 @@ Page({
                 let addImgList = []
                 for (let item of imgArr) {
                   if (item.type === 'image') {
-                    addImgList.push(item)
+                    addImgList.unshift(item)
                   }
                 }
                 _this.setData({
