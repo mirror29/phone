@@ -17,9 +17,13 @@ Page({
     hideModal: true, //模态框的状态  true-隐藏  false-显示
     animationData: {}, //
     delIndex: '',
-    list: ['选择图片', '添加文字'],
+    leftList: ['选项1','选项2'],
+    list: ['选择图层','上传图片', '选择素材','添加文字'],
     activeIndex: 0,
+    activeIndex2: 0,
     text: '',
+    canvasList: [],
+    bgImg: '../../images/phone.png',
     fontList: [{
         text: '字体1',
         fontFamily: 'Courier'
@@ -40,6 +44,7 @@ Page({
     colorList: [{}]
   },
   onLoad(options) {
+    wx.setStorageSync('canvasList', '')
     // 页面渲染完成  
     var _this = this;
     wx.getImageInfo({
@@ -75,7 +80,7 @@ Page({
     })
   },
   onReady() {
-    CanvasDrag.changeBgImage('../../images/phone.png');
+    CanvasDrag.changeBgImage(this.data.bgImg);
   },
   /**
    * 添加图片
@@ -177,7 +182,33 @@ Page({
     that.setData({
       activeIndex: idx
     })
+  },
+  tabClick2(e) {
+    var that = this;
+    var idx = e.target.dataset.index;
+    CanvasDrag.exportJson()
+      .then((imgArr) => {
+      let json = {};
+      json.id = that.data.activeIndex2;
+      imgArr.unshift(json)
+      let canvasList = that.data.canvasList
+      if (canvasList != []){
+        if (canvasList.findIndex((element) => (element[0].id === that.data.activeIndex2))){
+          canvasList.splice(that.data.activeIndex2, 1, imgArr)
+        } 
+      } else {
+        canvasList.push(imgArr)
+      }
+      console.log(canvasList);
+      wx.setStorageSync('canvasList', '')
 
+      // that.setData({
+      //   activeIndex2: idx
+      // })
+    })
+    .catch((e) => {
+      console.error(e);
+    });
   },
   // 显示遮罩层
   showModal: function() {
@@ -225,11 +256,13 @@ Page({
       animationData: this.animation.export(),
     })
   },
-
   toList: function () {
     this.hideModal();
     wx.navigateTo({
       url: '../list/list',
     })
+  },
+  longTap () {
+    console.log('长按')
   }
 })

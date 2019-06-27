@@ -16,6 +16,12 @@
     </view>
   </view>
 
+  <!-- 左侧选项栏 -->
+  <view class="left-tab">
+    <view wx:for="{{leftList}}" wx:key="index" class="list_item2 {{activeIndex2 == index ? 'on3' : ''}}" bindtap='tabClick2' data-index="{{index}}">{{item}}
+    </view>
+  </view>
+
   <view class='canvas-view'>
     <canvas-drag id="canvas-drag" graph="{{graph}}" width='600' height='790'></canvas-drag>
     <image src='{{camera}}' class='camera' width='{{cameraW}}' height='{{cameraH}}'></image>
@@ -23,7 +29,15 @@
 
   <!-- 内容 -->
   <view class="content">
-    <view wx:if="{{activeIndex == 0}}">
+  <view wx:if="{{activeIndex == 0}}">
+      <scroll-view class="scroll-view_H" scroll-x style="width: 94%">
+        <view class="scroll-view-item" wx:for="{{addImgList}}">
+          <image src='{{item.url}}' class='imgItem' bindlongtap="longTap" ></image>
+          <image src='../../images/x.png' class='del' data-index="{{index}}" bindtap='delImg'></image>
+        </view>
+      </scroll-view>
+    </view>
+    <view wx:if="{{activeIndex == 1}}">
       <scroll-view class="scroll-view_H" scroll-x style="width: 94%">
         <view class="scroll-view-item">
           <image src='../../images/upImg.png' class='add' bindtap="showModal"></image>
@@ -34,7 +48,7 @@
         </view>
       </scroll-view>
     </view>
-    <view wx:if="{{activeIndex == 1}}">
+    <view wx:if="{{activeIndex == 3}}">
       <scroll-view class="scroll-view_H2" scroll-x style="width: 94%">
         <view class='font-item' wx:for="{{fontList}}">
           <text style='font-family:{{item.fontFamily}}' data-font="{{item.fontFamily}}" bindtap='changeFont'>{{item.text}}</text>

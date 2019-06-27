@@ -376,3 +376,23 @@
   -webkit-transform: translateY(100%);
   transform: translateY(100%);
 }
+
+/* 左侧 */
+.left-tab{
+  position: fixed;
+  left: 20rpx;
+  top: 150rpx;
+}
+.list_item2 {
+  border: 1px solid #bbbbbb;
+  border-radius: 10rpx;
+  text-align: center;
+  height: 60rpx;
+  line-height: 60rpx;
+  width: 160rpx;
+  margin: 16rpx 0;
+}
+.on3{
+  color: #ec6120;
+  border: 1px solid #ec6120;
+}
