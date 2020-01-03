@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>定制手机壳</title>
+<!-- <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="css/phone_css.css" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script> 
+<link href="css/common.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
+<link href="css/PrintDocAjaxH.css" rel="stylesheet">
+<!-- <script src="js/jquery.query.js"></script> -->
+<script type="text/javascript">
+/* 	var $V5print = {
+		BasePath: '/',
+		CurrentArea: '',
+		SitePath: $.query.get('s')
+	}; */
+	$(function(){
+		cavasHeight=$(window).height()-20;
+		cavasWidth=700;
+		var bgCavasWidth=cavasWidth-150;
+		$("#canvas_tuan").attr({"width":cavasWidth,"height":cavasHeight});
+		$("#canvas_bg").attr({"width":bgCavasWidth,"height":cavasHeight});
+		$("#cutImage").attr({"width":bgCavasWidth,"height":cavasHeight});
+		$(".p_center").css("margin-left",$(window).width()/2-350-350);
+	}) 
+	
+	window.onresize=function(){
+		$(".p_center").css("margin-left",$(window).width()/2-350-350);
+	}
+</script>
+<script src="js/iframeTools.js"></script>
+<script src="js/clipBoard.js"></script>
+<style type="text/css">
+	#btnSel:hover {
+		cursor: pointer;
+		background: red;
+		color: rgb(0, 73, 116);
+	}
+</style>
+<style type="text/css">
+canvas {
+	  /*border: 1px solid red; */
+	  position: absolute;
+	 /*left: 50%;
+       top: 50%;
+       transform: translate(-50%,-50%);  */
+}
+#btnSel:hover{
+	cursor:pointer;
+	background-color:#AADFFD; 
+	color: rgb(0, 73, 116);
+}
+</style>
+<style type="text/css">
+	.tl{
+		width: 8px;
+		height: 8px;
+		position: absolute;
+		background: red;
+		cursor: nwse-resize;
+		z-index: 10;
+		display: none;
+	}
+	.bl{
+		width: 8px;
+		height: 8px;
+		position: absolute;
+		background: red;
+		margin-top:582px;
+		cursor: nesw-resize;
+		z-index: 10;
+		display: none;
+	}
+	.tr{
+		width: 8px;
+		height: 8px;
+		position: absolute;
+		background: red;
+		margin-left:700px;
+		cursor: nesw-resize;
+		z-index: 10;
+		display: none;
+	}
+	.br{
+		width: 8px;
+		height: 8px;
+		position: absolute;
+		background: red;
+		margin-left:700px;
+		margin-top:700px;
+		cursor: nwse-resize;
+		z-index: 10;
+		display: none;
+	}
+	.help{
+		width: 300px;
+		height: 360px;
+		position:absolute;
+	   /*  border: 1px solid red; */
+	    z-index:-1;
+	    margin-top: 300px;
+	    padding-left: 30px;
+	    background-image: url("img/help.jpg");
+	    background-size: 300px,300px;
+	}
+</style>
+</head>
+<body>
+	<img alt="" src="" id="img_show" style="display: none;">
+	<img alt="" src="" id="img_catPic" style="display: none;">
+	<div class="p_left">
+		<div class="menuDiv">
+			<ul id="nav">
+				<li><a href="#">选择手机型号</a>
+					<ul>
+						@for(brand in brandList){
+						<li><a href="#">${brand.brandName}</a>
+							<ul style="z-index: 1">
+								@for(phone in brand.models){
+								<li><a href="#" onclick="init(${phone.id},this)"
+									data-id="${phone.id}" data-picture="${phone.picture}"><img
+										id="bg_${phone.id}" src="${phone.picture}" />
+										<p>${phone.modelName}</p> </a></li> @}
+							</ul></li> @}
+					</ul></li>
+			</ul>
+		</div>
+	</div>
+	<div class="p_center">
+		<span class="tl" onmousedown="dragFn(this)" id="tl"></span>
+		<span class="bl" onmousedown="dragFn(this)" id="bl"></span>
+		<span class="tr" onmousedown="dragFn(this)" id="tr"></span>
+		<span class="br" onmousedown="dragFn(this)" id="br"></span>
+		<canvas id="canvas_tuan" height="700" width="730"> onclick="showTuan()" 你的浏览器不支持canvas标 签</canvas>
+		<canvas id="canvas_bg" onmousewheel="gundong()" height="700"
+			width="500" style="margin-left: 150px; cursor: move;"
+			onmousedown="initMouse();" onmouseup="endMouse()"
+			>你的浏览器不支持canvas标签</canvas>
+		<canvas id="showImage" style="display: none;" width="400" height="700"></canvas>
+		<canvas id="cutImage"  style="display: none;" width="400" height="700"></canvas>
+	</div>
+	</div>
+
+	<div class="p_right">
+		<div class="right_desc" style="width:300px;height:90px;background: #fff;border:1px solid black;margin-bottom:10px">
+			<table style="line-height:0px;font-size:14px;width:300px;line-height:40px;">
+				<tr>
+					<td>图片宽度:</td>
+					<td><input type="text" id="tex_width" size="10"></td>
+					<td rowspan="2" class="btnA">
+					<button id="btnSel" onclick="changeTuanSize()" style="border:none;padding:3px 5px 3px 5px;background-color:black;color:#fff;">调整图片尺寸</button></td>
+				</tr>
+				<tr>
+					<td>图片高度:</td>
+					<td><input type="text" id="tex_height" size="10"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="right_imgs">
+			<div class="right_title">
+				<span>选择图片</span>
+			</div>
+			<div class="right_search">
+				<table border="0">
+					<tr>
+						<td><input type="search" id="imageName" placeholder="搜索图片"
+							onkeydown="query()" /></td>
+						<td>&nbsp;</td>
+						<td><select id="imageType"
+							onchange="queryImageType()">
+								<option value="">全部</option>
+								<option value="风景">风景</option>
+								<option value="科幻">科幻</option>
+								<option value="萌宠">萌宠</option>
+								<option value="美女">美女</option>
+								<option value="其他">其他</option>
+						</select></td>
+					</tr>
+				</table>
+
+			</div>
+			<div></div>
+			<div id="search"></div>
+			<div class="imgDiv" id="imgDiv">
+				<ul>
+					@for(image in pageinfo.records){
+					<li><img src="${image.imagUrl}" onclick="selPic(this)" /></li> @}
+				</ul>
+			</div>
+
+			<div class="right_btn1">
+				<div class="btnUp">
+						<button onclick="queryImg(-1)"><</button>
+						<span id="showpage">${pageinfo.current}/${pageinfo.pages}</span>
+						<button onclick="queryImg(1)">></button>
+					</div>
+					<div class="right_btn2">
+						<!-- <button class="button1" data-toggle="modal" data-target="#addMobile" >+上传图片</button> -->
+						<button class="button1"  onclick="uploadLocal()" title="图片只会保存在本地，刷新网页后需要重新上传">+上传图片</button>
+						<button class="button2" id="button2" onclick="saveOrder();">保存</button>
+					</div>
+			</div>
+
+			<!-- 	<div class="right_btn1">
+						<button onclick="queryImg(${pageinfo.current-1})"><</button>
+						<button onclick="queryImg(${pageinfo.current+1})">></button>
+					</div>
+					<div class="right_btn2">
+						<button id="btn1">上传图片</button>
+						<button id="btn2" onclick="saveOrder();">保存</button>
+					</div> -->
+		</div>
+	</div>
+	</div>
+	
+	<!-- 模态框（Modal） -->
+<div class="modal fade" id="orderDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
+            </div>  -->
+           <!--  <div class="modal-body">在这里添加一些文本</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">提交更改</button>
+            </div> -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">正在上传图片亲稍后</h4>
+            </div> 
+           <div class="modal-body">温馨提示：图片只能保持到本地，刷新网站需要重新上传额</div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+		
+		<div class="modal fade" id="addMobile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="useraddimage">上传图片</h4>
+            </div>
+            <div class="modal-body">
+            	<form action="#" class="form-horizontal" method="post" name="from" role="form" enctype="multipart/form-data">
+            	
+            	<div class="form-group">
+				    <label for="inputPassword" class="col-sm-2 control-label">图片名称</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="addimageName" name="imageName" placeholder="请输入图片名称">
+				    </div>
+				  </div>
+            	
+            	 <div class="form-group">
+				    <label for="inputPassword" class="col-sm-2 control-label" >图片分类</label>
+				     <div class="col-sm-10">
+				       <select class="form-control" name="imageType">
+					      <option value="其他">其他</option>
+					      <option value="风景">风景</option>
+						  <option value="科幻">科幻</option>
+						  <option value="萌宠">萌宠</option>
+						  <option value="美女">美女</option>
+				      </select>
+				    </div>
+				  </div>
+				  
+				  <div class="form-group">
+				    <label for="inputPassword" class="col-sm-2 control-label">选择文件</label>
+				    <div class="col-sm-10">
+				    	<input type="file" id="inputfile" name="picture" onchange="readImg()">
+				        <p class="help-block"><img  id ="yulan" alt="" src="" width="150"></p>
+				    </div>
+				  </div>
+				  
+				</form>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="uploadImage()">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div id="upImg"></div>
+<div  class="help">
+<!-- 1.选择手机壳型号模版<br/>
+2.选择右侧的图片进行贴图<br/>
+3.用滚轮可以等比例调整图片大小<br/>
+4.拖动图片的4个脚可以自定义图片大小<br/>
+5.单击模型可以预览贴图效果<br/>
+6.在模型上进行拖动可以调整图片位置<br/> -->
+</div>
+</body>
+<script type="text/javascript">
+		var  disX,disY;
+	 	var  picX=0,picY=0;
+	 	var startX=0,StartY=0//移动后的位置
+	 	var cavasWidth=730,cavasHeight=700,bgCavasWidth=400;
+	 	var initWidth,initHeight;//模型初始宽高
+		var suofabeishu=0.4;//缩放倍数
+		var newWidth,newHeight;//缩放之后的图片宽高
+		var ltTop=0,ltLeft=0;//初始化左上面的拉动定位
+		var uploadImg=[];//用户上传的图片
+		function getCtx(c){
+	 		return c.getContext("2d");
+	 	}
+		
+		//上传文件到本地
+		function uploadLocal(){
+			
+			//判断是否支持FileReader
+		    if (window.FileReader) {
+		        var reader = new FileReader();
+		    } else {
+		        alert("您的设备不支持自定义图片功能，如需该功能请升级您的设备！");
+		    }
+			$("#upImg").html('<input type="file" id="inputfile1" name="picture1" style="display: none;">');
+		    $("#inputfile1").click();
+		    $("#inputfile1").change(function(){
+		    	 var context=$("#inputfile1")[0];
+				    //获取文件
+				    var file = context.files[0];
+				    var imageType = /^image\//;
+				    //是否是图片
+				    if (!imageType.test(file.type)) {
+				        alert("请选择图片！");
+				        return;
+				    }
+				    //读取完成
+				    reader.onload = function(e) {
+				       var  imgFile = e.target.result;
+				        //$("#yulan").attr('src', imgFile);
+				        //uploadImg.push(imgFile);
+				        var image=new Image();
+				        image.src=imgFile;
+				        image.onload=function(){
+				        	  /*  var html='<li><img src="'+image.src+'" onclick="selPic(this)"/></li>';
+						       $("#imgDiv").find("ul").prepend(html); */
+						       uploadImg.push(imgFile);
+						       queryImg(0)
+						       //alert("上传成功");
+				        }
+				    };
+				    reader.readAsDataURL(file);
+		    });
+		}
+		
+		//上传图案
+		function uploadImage(){
+			if(from.imageName.value==""){
+				alert("请输入图片名称");
+			}
+			if(from.picture.value==""){
+				alert("请选择上传图片");
+			}
+			var files = $("#inputfile").get(0).files[0]; //获取file控件中的内容
+			var url="useraddimage";
+			var fd = new FormData();
+		    fd.append("imageName",from.imageName.value);
+		    fd.append("picture", files);
+		    fd.append("imageType", from.imageType.value);
+		    $.ajax({
+		        type: "POST",
+		        contentType:false, //必须false才会避开jQuery对 formdata 的默认处理 , XMLHttpRequest会对 formdata 进行正确的处理
+		        processData: false, //必须false才会自动加上正确的Content-Type 
+		        url: url,
+		        data: fd,
+		        success: function (msg) {
+		        	callFunction(msg);
+		        },
+		        error: function (msg) {
+		            alert("error");
+		        }
+		    });
+		}
+		
+		function readImg(){
+			   /*var path=$("#inputfile").val();
+			   console.log(path); */
+			   //创建读取文件的对象
+			    var reader = new FileReader();
+			    //创建文件读取相关的变量
+			    var imgFile;
+			    //为文件读取成功设置事件
+			    reader.onload=function(e) {
+			        imgFile = e.target.result;
+			        console.log(imgFile);
+			        $("#yulan").attr('src', imgFile);
+			        var filename=$("#inputfile")[0].files[0].name;
+			        if($("#addimageName").val()==""){
+			          $("#addimageName").val(filename.substring(0,filename.lastIndexOf(".")));
+			        }
+			    };
+			    //正式读取文件
+			    reader.readAsDataURL($("#inputfile")[0].files[0]);
+			}
+		
+		//改变画布的宽高
+		function changeSize(width,height){
+			$("#showImage").attr({"width":width,"height":height});
+		}
+		function changeCutSize(width,height){
+			$("#cutImage").attr({"width":width,"height":height});
+		}
+		function saveOrder(){
+			$("#button2").attr('disabled',true);
+			var form=new FormData();
+			var imageData=getCtx($("#canvas_bg")[0]).getImageData(10,100,newWidth,newHeight);
+			//$("#showImage").attr({"width":imageData.width,"height":imageData.height});
+			changeSize(imageData.width,imageData.height);
+
+			//**将透明调整为白色
+			 /* for(var i = 0; i < imageData.data.length; i += 4) {
+			    // 当该像素是透明的，则设置成白色
+			    if(imageData.data[i + 3] <= 250) {
+			        imageData.data[i] = 255;
+			        imageData.data[i + 1] = 255;
+			        imageData.data[i + 2] = 255;
+			        imageData.data[i + 3] = 255; 
+			    }
+			}  */
+			var ctx=getCtx($("#showImage")[0]);
+			ctx.fillStyle = "white";
+			ctx.fillRect(0, 0, ctx.width,ctx.height); 
+			ctx.putImageData(imageData,0,0,0,0,imageData.width+400,imageData.height+100);
+			var image=new Image();
+			image.setAttribute('crossOrigin', 'anonymous');
+			image.src=$("#showImage")[0].toDataURL("image/jpeg");
+			//放大至原始尺寸
+			changeSize(newWidth/suofabeishu,newWidth/(newWidth/initHeight));
+			
+			//剪切图片
+			var cutImageData=null;
+			if(!isHY){
+				cutImageData=getCtx($("#cutImage")[0]).getImageData(10,100,newWidth,newHeight);
+			}else{
+				cutImageData=getCtx($("#cutImage")[0]).getImageData(0,0,initWidth,initHeight);
+			}
+			changeCutSize(cutImageData.width,cutImageData.height);
+			getCtx($("#cutImage")[0]).putImageData(cutImageData,0,0,0,0,cutImageData.width,cutImageData.height);
+			var cutImage=new Image();
+			cutImage.setAttribute('crossOrigin', 'anonymous');
+			cutImage.src=$("#cutImage")[0].toDataURL("image/jpeg");
+			changeCutSize(newWidth/suofabeishu,newWidth/(newWidth/initHeight));
+			cutImage.onload=function(){
+				 console.log("画图宽度："+(newWidth));
+				 console.log("画图高度："+(newHeight));
+				 var w=cutImageData.width;
+				 var h=cutImageData.height;
+				 if(!isHY){
+					 w=newWidth/suofabeishu;
+					 h=newWidth/(newWidth/initHeight);
+				     getCtx($("#cutImage")[0]).drawImage(cutImage,0,0,w,h);
+				 }else{
+					 getCtx($("#cutImage")[0]).drawImage(cutImage,0,0,w,h,0,0,w,h);
+				 }
+				 var imgurl=$("#cutImage")[0].toDataURL("image/jpeg");
+				 form.append("orderPic",imgurl);
+				 form.append("modelName",modelName);
+				 form.append("modelId",modelId);
+				 
+				 $.ajax({
+		                url:"/saveOrder",
+		                type:"post",
+		                data:form,
+		                processData:false,
+		                contentType:false,
+		                success:function(data){
+		                    //alert("图片保存成功，请将订单号："+data+" 告诉客服，定制你的手机壳额！");
+		                    $('#orderDetail').modal({
+		                    	remote:"/orderDetail"
+		                    });
+		                    $('#orderDetail').on('shown.bs.modal', function () {
+			                    $("#ordercode").text(data);
+			                    $("#orderImg").attr("src",$("#img_show").attr("src"));
+			                    $("#ordercode").show();
+		                    })
+		                    isHY=true;
+		                    $("#button2").attr('disabled',false);
+		                }
+				
+				}); 
+				 $("#img_catPic").attr("src",imgurl);
+				 getCtx($("#showImage")[0]).drawImage(image,0,0,newWidth/suofabeishu,newWidth/(newWidth/initHeight));
+				 var imgurl=$("#showImage")[0].toDataURL("image/jpeg");
+				 $("#img_show").attr("src",imgurl);
+			}
+			
+		}
+		 var srcLtMarginLeft=0,srcLtMarginTop=0;//记录原来的坐标值
+		 
+	 	function dragFn(obj,ev){
+	 		var oEv = ev || window.event;
+			var oldWidth = obj.offsetWidth;
+			var oldHeight = obj.offsetHeight;
+			var oldX = oEv.clientX;
+			var oldY = oEv.clientY;
+			var initX=parseInt(tex_width);
+			var initY=parseInt(tex_height);
+			var ltLeft=parseInt($("#tl").css("margin-left"));
+		 	var ltTop=parseInt($("#tl").css("margin-top"));
+		 	var ylweiX=startX,ylweiY=StartY;//第二次移动后的开始位置
+		 	var flagX=false,flagY=false;//排队其实位置是否为负数，是就减去这个数
+		 	if(srcLtMarginLeft<0){
+		 		flagX=true;
+		 	}
+	 		if(srcLtMarginTop<0){
+	 			flagY=true;
+	 		} 
+	 		var className=$(obj).attr("class");
+			document.onmousemove = function(ev) {
+				var oEv = ev || event;
+				console.log(oEv.clientX);
+				//obj.style.left=oEv.clientX-oldX+"px";
+				//obj.style.top=oEv.clientY-oldY+"px";
+				//suofangPic(oEv.clientX-oldX,oEv.clientY-oldY);
+				/* tex_width=tex_width ||img.width;
+ 		 		tex_height=tex_height || img.height; */
+ 		 		if(oEv.which==1){
+ 		 			var moveX=oEv.clientX-oldX;
+ 	 		 		var moveY=oEv.clientY-oldY;
+ 	 		 		var marginLeft=moveX+ltLeft;
+ 	 		 		var marginTop=moveY+ltTop;
+ 	 		 		rePositionPoint();
+ 	 		 		console.log($(this).attr("class")!="bl");
+ 	 		 		if(className=="bl"){
+ 	 		 		  //picY=moveY+ylweiY;
+ 	 		 		  tex_width=initX+moveX;
+ 	 				  tex_height=initY+moveY;
+ 	 		 	      picX=moveX+ylweiX;
+ 	 		 		}
+ 	 		 		if(className=="tl"){
+ 	 		 		  picY=moveY+ylweiY;
+ 	 		 		  tex_width=initX-moveX;
+ 	 				  tex_height=initY-moveY;
+ 	 		 	      picX=moveX+ylweiX;
+ 	 		 		}
+ 	 		 		
+ 	 		 		if(className=="tr"){
+ 	 	 		 		  //picY=moveY+ylweiY;
+ 	 	 		 		  console.log("右上角移动距离："+moveX +"" +moveY);
+ 	 	 		 		  tex_width=initX+moveX;
+ 	 	 				  tex_height=initY-moveY;
+ 	 	 		 	      picX=moveX+ylweiX;
+ 	 	 		 	}
+ 	 		 		
+ 	 		 		if(className=="br"){
+ 	 		 		  //picY=moveY+ylweiY;
+ 	 		 		  tex_width=initX+moveX;
+ 	 				  tex_height=initY+moveY;
+ 	 		 	      //picX=moveX+ylweiX;
+ 	 		 		}
+ 	 		 		
+ 	 		 		startX=picX;
+ 	 		 		StartY=picY;
+ 	 		 		$("#tex_width").val(tex_width);
+ 	 		 		$("#tex_height").val(tex_height); 
+ 	 				changeTuanSize();
+ 		 		}
+			}
+			document.onmouseup = function() {
+				document.onmousemove = null;
+			}
+	 	}
+	 	//缩放图片
+	 	function suofangPic(x,y){
+	 		var c=$("#canvas_tuan")[0];
+	 		var ctx=getCtx(c);
+	 		var img=getTuanPic()
+	 		ctx.globalAlpha=1.0;
+	 		//$("#canvas_bg").css("opacity","0.5");
+	 		//debugger;
+	 		clearRect("canvas_tuan");
+	 		img.onload=function(){
+		 		ctx.drawImage(img,0,0,img.width-x,img.height-y,0,0,img.width-x,img.height-y);
+		 		url= getTuanPic().src;
+	 		}
+	 	}
+	 	
+		/* $(function(){
+			init();
+		}) */
+		
+		//*重新绘制背景图片
+		function redrawBgImg(){
+			var c=$("#canvas_bg")[0];
+			var bgImg=new Image;
+			bgImg.src=bgImgUrl;
+	 		var ctx=getCtx(c);
+	 		console.log(bgImg.width+" "+bgImg.height);
+	 		//ctx.globalAlpha=0.5;
+	 		var drawHeight=$(window).height()-150;
+	 		bgImg.onload=function(){
+	 			//getCtx($("#canvas_bg")[0]).clearRect(0,0,300,cavasHeight);
+	 			//$("#canvas_bg").attr({"width":300,"height":cavasHeight});
+	 			initWidth=bgImg.width;
+	 			initHeight=bgImg.height;
+	 			suofabeishu=drawHeight/initHeight;
+	 			newWidth=initWidth*suofabeishu;
+	 			console.log("重绘背景图片:"+bgImg.src);
+	 			$("#img_show").attr("src",bgImg.src);
+	 			newHeight=drawHeight;//bgImg.height*(newWidth/bgImg.width);
+	 			ctx.drawImage(bgImg,10,100,newWidth,drawHeight);
+	 		}
+		}
+		var bgImgID;//背景图片
+		function init(id,obj){
+			//$(obj).html('<img id="bg_'+id+'" alt="" src="'+$(obj).data("picture")+'" style="display: none;">');
+			bgImgUrl=$("#bg_"+id).attr("src");
+	 		modelName=$(obj).find("p").text();
+	 		modelId=$(obj).data("id");
+	 		getCtx($("#canvas_bg")[0]).clearRect(0,0,bgCavasWidth,cavasHeight);
+	 		redrawBgImg();
+		}
+		var modelName;
+		var modelId;
+		var beishu=0;
+		
+		//滚动的时候改变图片大小
+		function gundong(e){
+			var direct=0;
+			e=e || window.event;
+			var value="";
+			if(e.wheelDelta){//IE/Opera/Chrome
+				value=e.wheelDelta;
+			  }else if(e.detail){//Firefox
+				value=e.detail;
+			}
+		    if (e&&e.preventDefault){ 
+		        e.preventDefault();
+		        e.stopPropagation();
+		    }else{ 
+		        e.returnvalue=false;  
+		        return false;     
+		    }
+			console.log(value);
+			$("span").show();
+			var c=$("#canvas_tuan")[0];
+	 		var ctx=getCtx(c);
+	 		var img=getTuanPic()
+	 		ctx.globalAlpha=1.0;
+	 		//clearRect("canvas_tuan");
+	 		if(value>0){//放大
+	 			console.log("放大");
+	 			img.onload=function(){
+	 				tex_width=tex_width ||tuanInitWidth;
+	 		 		tex_height=tex_height || tuanInitHeight;
+	 				tex_width=parseInt(tex_width)+10
+	 				tex_height=parseInt(tex_height)*((parseInt(tex_width)+10)/parseInt(tex_width))
+	 				$("#tex_width").val(tex_width);
+	 		 		$("#tex_height").val(tex_height); 
+	 				changeTuanSize();
+	 				rePositionPoint();
+		 		}
+	 		}else{
+	 			console.log("缩小");
+	 			img.onload=function(){
+	 				tex_width=tex_width ||img.width;
+	 		 		tex_height=tex_height || img.height;
+	 				tex_width=parseInt(tex_width)-10
+	 				tex_height=parseInt(tex_height)*((parseInt(tex_width)-10)/parseInt(tex_width))
+	 				$("#tex_width").val(tex_width);
+	 		 		$("#tex_height").val(tex_height); 
+	 				changeTuanSize();
+	 				rePositionPoint();
+		 		}
+	 		}
+		}
+		function movePic(even){
+	 		var e = event || window.event;
+	 		if(e.which==1){//鼠标左键被按下
+	 			redrawBgImg();
+	 			clearRect("canvas_tuan");
+	 			var cusX=e.clientX;
+	 			var cusY=e.clientY;
+	 			picX=cusX-disX+startX;
+	 			picY=cusY-disY+StartY;
+	 			rePositionPoint();
+	 			//console.log(picX+" "+picY);
+	 			//$("#canvas_bg").css("cursor","move");
+	 			//$("#canvas_bg").css("opacity","0.5");
+	 		    showTuan(picX,picY);
+	 		}
+	 	}
+		function initMouse(e){
+	 		var e = event || window.event;
+	 		disX=e.clientX;
+	 		disY=e.clientY;
+	 		$("#canvas_bg").mousemove(movePic);
+	 	}
+	 	function endMouse(){
+	 		var e = event || window.event;
+	 		startX=picX;
+	 		StartY=picY;
+	 		showTuan(startX,StartY);
+	 		//$("#canvas_bg").css("cursor","default");
+	 		finish();
+	 		$("#canvas_bg").unbind("mousemove");
+	 	}
+	 	
+	 	//重新调整缩放点位
+	 	function rePositionPoint(){
+	 		//左上角
+	 		$("#tl").css({"margin-left":picX,"margin-top":picY});
+	 		if(parseInt($("#tl").css("margin-left"))<0 || picX<0){
+	 			$("#tl").css("margin-left","0");
+	 		}
+	 		if(parseInt($("#tl").css("margin-top"))<0 || picY<0){
+	 			$("#tl").css("margin-top","0");
+	 		}
+	 		//左下角
+	 		$("#bl").css({"margin-left":picX,"margin-top":parseInt(picY)+parseInt(tex_height)});
+	 		 if(parseInt($("#bl").css("margin-left"))<0 || picX<0){
+	 			$("#bl").css("margin-left","0");
+	 		}
+	 		if(parseInt($("#bl").css("margin-top"))>700){
+	 			$("#bl").css("margin-top",700);
+	 		} 
+	 		
+	 		//右上角
+	 		$("#tr").css({"margin-left":add(picX,tex_width),"margin-top":picY});
+	 		console.log("右上角图片坐标："+($("#bl").css("margin-top")));
+	 		if(parseInt($("#tr").css("margin-left"))>700){
+	 			$("#tr").css("margin-left",700);
+	 		}
+	 		if(parseInt($("#tr").css("margin-top"))<0 || picY<0){
+	 			$("#tr").css("margin-top","0");
+	 		}
+	 		
+	 		//右下角
+	 		$("#br").css({"margin-left":add(picX,tex_width),"margin-top":parseInt(picY)+parseInt(tex_height)});
+	 		 if(parseInt($("#br").css("margin-left"))>700){
+	 			$("#br").css("margin-left",700);
+	 		}
+	 		console.log("图片y坐标："+($("#bl").css("margin-top")));
+	 		if(parseInt($("#br").css("margin-top"))>700){
+	 			$("#br").css("margin-top",700);
+	 		} 
+	 		
+	 		
+	 	}
+	    function add(a,b){
+	    	return parseInt(a)+parseInt(b);
+	    }
+	 	
+		//获取图案图片
+		function getTuanPic(){
+			var img=new Image();
+			img.setAttribute('crossOrigin', 'anonymous');
+	 		img.src=$("#canvas_tuan")[0].toDataURL("image/jpeg");
+		    return img;
+		}
+		var url="img/img_bk.jpg";
+		//显示图片
+		function showTuan(x,y){
+	 		var c=$("#canvas_tuan")[0];
+	 		var ctx=getCtx(c);
+	 		var img=new Image();
+	 		img.setAttribute('crossOrigin', 'anonymous');
+	 		img.src=url;
+	 		ctx.scale(1,1);
+	 		ctx.globalAlpha=1.0;
+	 		$("#canvas_bg").css("opacity","0.5");
+	 		$("span").show();
+	 		var new_tex_width=img.width*suofabeishu;
+	 		tex_width=tex_width ||img.width*suofabeishu;
+	 		tex_height=tex_height || img.height*(new_tex_width/img.width);
+	 		/* tex_height=tex_height*(new_tex_width/tex_width);
+	 		tex_width=tex_width*suofabeishu; */
+	 		$("#tex_width").val(tex_width);
+	 		$("#tex_height").val(tex_height); 
+	 		var x =x ||0;
+	 		var y=y || 0;
+	 		picX=x;
+	 		picY=y;
+	 		ctx.drawImage(img,x,y,$("#tex_width").val(),$("#tex_height").val());
+	 	}
+		var tex_width,tex_height;//绘制图片的宽高
+		//改变图片尺寸
+		function changeTuanSize(){
+			if($("#tex_width").val()){
+				
+			};
+	 		if($("#tex_height").val()){
+	 			
+	 		};
+	 		$("span").show();
+	 		redrawBgImg();
+	 		tex_width=$("#tex_width").val();
+	 		tex_height=$("#tex_height").val();
+	 		getCtx($("#canvas_tuan")[0]).clearRect(0,0,800,cavasHeight);
+	 		showTuan(picX,picY);
+		}
+		//查看大图
+		function findLagPic(){
+			window.open('', "_blank",'').document.write("<img height=\"100%\" src='"+$("#img_show").attr("src")+"'/>")
+		}
+		/**清空画布*/
+	 	function clearRect(id){
+	 		getCtx($("#canvas_tuan")[0]).clearRect(0,0,800,cavasHeight);
+	 	}
+		var tuanInitWidth,tuanInitHeight;//图片图案初始化宽高
+		function selPic(obj){
+			url=obj.src;
+			var left=parseInt($("#canvas_bg").css("margin-left"));
+			var img=new Image();
+	 		img.setAttribute('crossOrigin', 'anonymous');
+	 		img.src=url;
+	 		img.onload=function(){
+	 			startX=left+10,StartY=100;
+				showTuan(startX,StartY);
+				finish();
+				//记录图片元素数据
+				tuanInitWidth=tex_width;
+				tuanInitHeight=tex_height
+	 		}
+	 		//清空数据，充值图片宽高
+			tex_width=null;
+	 		tex_height=null;
+		}
+		var isHY=false;//是否缩放会原尺寸
+		//完成图片
+	 	function finish(){
+	 		var img = getTuanPic();
+	 		img.setAttribute('crossOrigin', 'anonymous');
+	 		var c=$("#canvas_bg")[0];
+	 		var ctx=getCtx(c);
+	 		img.onload=function(){
+	 		    ctx.globalAlpha=1.0;
+	 		    //getCtx($("#canvas_bg")[0]).clearRect(0,0,300,cavasHeight);
+	 		    ctx.globalCompositeOperation="source-atop";
+	 		    
+	 			ctx.drawImage(img,parseInt($("#canvas_bg").css("margin-left")),0,bgCavasWidth,cavasHeight,0,0,bgCavasWidth,img.height);
+	 			getCtx($("#cutImage")[0]).drawImage(img,150,0,bgCavasWidth,cavasHeight,0,0,bgCavasWidth,img.height);
+	 		}
+	 		$("#canvas_bg").css("opacity","1.0");
+	 		clearRect("canvas_tuan");
+	 		$("span").hide();
+	 		isHY=false;
+	 	}
+		
+		function query(e){
+		  if(event.keyCode==13){
+			   queryImg(current);
+		   }
+		}
+		
+		function queryImageType(e){
+			 current=1;
+			 queryImg(0);
+		}
+		var current=${pageinfo.current}
+		var pages=${pageinfo.pages}
+		function queryImg(type){
+			var imageName=$("#imageName").val();
+			var imageType=$("#imageType").val();
+			var form=new FormData();
+			form.append("imageName",imageName);
+			form.append("imageType",imageType);
+			var cur=current+type;
+			if(cur>pages){
+				cur=pages;
+			}
+			if(cur<0){
+				cur=1;
+			}
+			form.append("current",cur);
+			form.append("size",12-uploadImg.length);
+			$.ajax({
+                url:"/tuanlist",
+                type:"post",
+                data:form,
+                processData:false,
+                contentType:false,
+                success:function(data){
+					console.log(data)
+                	var html="";
+                	var arr=data.records;
+                	html+="<li>"
+                	for(var i=uploadImg.length;i>0;i--){
+                		html+='<img src="'+uploadImg[i-1]+'" onclick="selPic(this)"/>';
+                	}
+                	for(var i=0;i<arr.length;i++){
+                		html+='<img src="'+arr[i].imagUrl+'" onclick="selPic(this)"/>';
+                	}
+                	html+="</li>"
+                	$("#imgDiv").find("ul").html(html);
+                	current=data.current;
+                	pages=data.pages;
+                	$("#showpage").text(data.current+"/"+data.pages);
+                }
+		
+		   }); 
+		}
+		function callFunction(data){
+			var html="";
+        	var arr=data.records;
+        	for(var i=0;i<arr.length;i++){
+        		html+='<li><img src="'+arr[i].imagUrl+'" onclick="selPic(this)"/></li>';
+        	}
+        	$("#imgDiv").find("ul").html(html);
+        	current=data.current;
+        	$("#showpage").text(data.current+"/"+data.pages);
+        	$("#addMobile").modal('hide');
+		}
+		function copy(){
+			var test = new clipBoard(document.getElementById('ordercode'), {
+				beforeCopy: function() {},
+				copy: function() {
+					return $('#ordercode').text();
+				},
+				afterCopy: function() {
+					$("#ordercode").data("status", 1);
+					$("#btnCopy").css("background", "#05774e")
+					$("#btnCopy").text("复制成功，请将订单号发送给客服！")
+				}
+			});
+		}
+		
+	</script>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<style>
+			.row:nth-child(1){
+				border-bottom: 1px solid #fbfbfb;
+			}
+			h4{
+				padding: 13px 0;
+			}
+			ul{
+				width: 100%;
+				padding-left: 0;
+				background: #fcfcfc;
+			}
+			p{
+				margin-bottom: 0;
+			}
+			li{
+				list-style: none;
+				color: #858585;
+				padding: 14px 0;
+			}
+			p{
+				font-size: 20px;
+			}
+			.box{
+				margin: 5px 0;
+			}
+			.box p{
+				font-size: 18px;
+				margin-top: 3px;
+			}
+			.row:nth-child(2)>ul li>P{
+				padding-left: 40px;
+			}
+			.row>ul>li{
+				border-bottom: 1px solid #f6f6f6;
+			}
+			img{
+				width: 85px;
+				height: 170px;
+			}
+			.box-list{
+				float: none;
+				clear: both;
+				overflow: hidden;
+				background: #fff;
+				padding: 10px 0 10px 10px;
+			}
+			.box{
+				width: 7rem;
+				float: left;
+				text-align: center;
+				margin-right: 1px;
+			}
+			a,a:hover{
+				color: #858585;
+				text-decoration: none;
+				
+			}
+		</style>
+		<script>
+			window.onload = function(){
+				function aClick(e){
+					console.log(e)
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col  text-center">
+					<h4>型号选择</h4>
+				</div>
+			</div>
+
+			<div class="row">
+				<ul class="one" id="list">
+					<!-- <li>
+						<p>Apple (苹果) 和透明壳+红软壳通用</p>
+
+						<ul class="two" >
+							<li><p class="tit">i5</p>
+								<div class="box-list" >
+									<div	 class="box">
+										<a href="show.html">
+											<img src="img/i5.png"/>
+											<p>软壳</p>
+										</a>
+									</div>
+									<div	 class="box">
+										<a href="show.html">
+											<img src="img/i6p.png"/>
+											<p>玻璃壳</p>
+										</a>
+									</div>
+									<div	 class="box">
+										<a href="show.html">
+											<img src="img/i6.png"/>
+											<p>透明壳</p>
+										</a>
+									</div>
+								</div>
+							</li>
+							<li><p>i6</p></li>
+							<li><p>i6p</p></li>
+							<li><p>i7</p></li>
+							<li><p>i7p</p></li>
+							<li><p>i8</p></li>
+						</ul>
+					</li> -->
+
+
+				</ul>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="css/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            // let url = 'http://192.168.31.7:8080'
+			$.ajax({
+            url:url + "/brandList",
+            type:"post",
+			// data:form,
+			
+            processData:false,
+            contentType:false,
+            success:function(data){
+                console.log(data)
+				let phoneList = data
+				
+				for (const item of phoneList) {
+					// console.log(item)
+					let phone = ''
+						phone += '<li class="lis">'+
+									'<p>'+ item.brandName +'</p>'+
+									'<ul class="two" style="display: none;">'+
+					
+								    '</ul>'
+								'</li>'
+					$(".one").append(phone);
+				}
+
+					$("#list .lis").click(function () {     //二级分类
+						let index = $("#list .lis").index(this);
+						console.log(index)
+						let modals = []
+						    modals = phoneList[index].models
+
+						console.log(modals)
+                        $('.two').empty();
+						for (const item2 of modals) {
+						let modalName = []
+							modalName += '<li class = "li">'+
+								            '<p class="tit">'+ item2.modelName +'</p>'+
+										       '<div class="box-list" style="display: none;">'+
+											   '</div>'
+										 '<li>'
+                        
+						$(".lis").eq(index).find('.two').append(modalName)
+
+				     	}
+
+					 $('.two .li').click(function(){         // 三级分类
+						let i = $(".two .li").index(this);
+						console.log(i)
+						let childs = modals[i].childs
+						console.log(childs)
+
+						 $('.box-list').empty();
+
+						 for (const item3 of childs) {
+							// console.log(item3)
+
+							let imgList = ''
+					     	imgList += '<div class="box">'+
+											`<a href=show.html?${item3.picture}&id=${item3.id}&modelName=${item3.modelName}>`+
+												'<img src="'+ url + item3.picture +'"/>'+
+												'<p>'+ item3.modelName +'</p>'+
+											'</a>'+
+										'</div>'
+						  
+							$(".li").eq(i).find(".box-list").append(imgList)
+
+							$('.box-list a').click(function(){
+								console.log(this)
+								window.location.href = $(this).attr('href')
+							})
+						
+						}
+						
+					 })
+
+					 $('.two>li').click(function(){
+						// console.log(this)
+					    $(this).find('.box-list').toggle() 
+						return false;
+					})
+					$('.one>li').click(function(){
+						// console.log(this)
+						$(this).find('.two').toggle()
+						return false;
+					})
+					$('.box-list').click(function(){
+						return false;
+					})
+					
+					});
+				    
+			    }
+		 }); 
+			
+		</script>
+	</body>
+</html>

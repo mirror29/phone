@@ -1,0 +1,201 @@
+body{
+    width: 100%;
+}
+li{
+    list-style-type:none;
+}
+ul{
+    padding: 0;
+    width: 500%;
+}
+.title{
+    background-color: #ffffff;
+}
+.text-center h4{
+    padding: 14px 0;
+    margin: 0;
+}
+.container-fluid{
+    height: 580px;
+    background-color: #f6f6f6;
+}
+.am-table-bordered{
+    border: none;
+}
+.container{
+    background: #ccc;
+}
+#show{
+    padding: 10px 30px;
+    overflow: hidden;
+    /* background: #f6f6f6; */
+}
+#show .col{
+    background: #fff;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    height: 95%;
+    /* overflow: hidden; */
+}
+#myCanvas{
+    position:absolute;
+    top:23%; left:50%;
+    margin-top:-100px; /*元素高度的一半*/
+    margin-left:-100px; /*元素宽度的一半*/
+}
+#upCanvas{
+    position: absolute;
+    top:23%; left:50%;
+    margin-top:-100px; /*元素高度的一半*/
+    margin-left:-100px; /*元素宽度的一半*/
+}
+.upper-canvas {
+    height: 414px;
+    width: 200px
+}
+
+.row:nth-child(3){
+    padding: 20px 40px;
+}
+.row:nth-child(3) .col-xs-3{
+    margin-right: 20px;
+}
+.row:nth-child(3) .col-xs-3 img{
+    width: 100px;
+    height: 100px;
+}
+.upload{
+    display: block;
+    width: 108px;
+    margin: 0;
+    position: absolute;
+    top: -46%;
+}
+.upload img{
+    width: 100%;
+}
+.foot{
+    width: 100%;
+}
+.scroll{
+    position: relative;
+    padding: 0;
+}
+.footImage{
+    margin-left: 113px;
+    margin-top: -20px;
+    display: flex;
+}
+.footImage .images{
+    width: 108px;
+    margin: 0 5px;
+}
+
+.images img{
+    height: 108px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.button{
+    margin-top: 460px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.button .btn{
+    width: 85px;
+    height: 35px;
+}
+
+.tl{
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background: rgb(230, 46, 46);
+    cursor: nwse-resize;
+    z-index: 10;
+    left: 20px;
+    top: 10px;
+    display: none;
+}
+.bl{
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background: rgb(230, 46, 46);
+    cursor: nesw-resize;
+    z-index: 10;
+    left: 20px;
+    display: none;
+}
+.tr{
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background: rgb(230, 46, 46);
+    cursor: nesw-resize;
+    z-index: 10;
+    display: none;
+}
+.br{
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background: rgb(230, 46, 46);
+    cursor: nwse-resize;
+    z-index: 10;
+    display: none;
+}
+
+/* 模态框 */
+.mymodal{
+    background-color: #363636;
+    opacity: 0.9;
+    height: 280px;
+    width: 250px;
+    border-radius: 5px;
+    position: absolute;
+    top:32%; left:43%;
+    margin-top:-100px; /*元素高度的一半*/
+    margin-left:-100px; /*元素宽度的一半*/
+    /* display: none; */
+}
+.modal-tit{
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+.modal-tit p{
+    font-size: 24px;
+    color: #14A2B8;
+    margin-right: 10px;
+}
+.modal-tit img{
+    height: 30px;
+    width: 30px;
+}
+.modal-num p{
+    color: #ffffff;
+    text-align: center;
+}
+.modal-num button{
+    float: right;
+    margin-right: 20px;
+    margin-top: 10px;
+}
+.modal-foot{
+    margin-top: 90px;
+    display: flex;
+    justify-content: space-around;
+}
+#input {position: absolute;top: 0;left: 0;opacity: 0;z-index: -10;}
+
+.box{
+    position: absolute;
+    top:22%; left:48.2%;
+    margin-top:-100px; /*元素高度的一半*/
+    margin-left:-100px; /*元素宽度的一半*/
+}

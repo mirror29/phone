@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,user-scalable=0" name="viewport" />
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/amazeui.min.css">
+		<link rel="stylesheet" href="css/show.css" />
+
+		<script>
+            window.onload = function(){
+				MoveFun1();
+				changeSize(tl); 
+				changeSize(bl);
+				changeSize(tr);
+				changeSize(br);
+			}
+			
+		</script>
+	</head>
+	
+	<body>
+		
+		<div class="container-fluid">
+			<div class="row title">
+				<div class="col text-center">
+					<h4>展示</h4>
+				</div>
+			</div>
+			<div class="row" id="show">
+				<div class="col component" id="col">
+					<div class="box">
+						<span class="tl" id="tl"></span>
+						<span class="bl" id="bl"></span>
+						<span class="tr" id="tr"></span>
+						<span class="br" id="br"></span>
+					</div>
+
+				    <canvas id="myCanvas" ></canvas>
+				    <canvas id="upCanvas" ></canvas>
+					
+					<div class="button">
+						<li><a class="btn btn-info " href="./list.html" role="button">选择型号</a></li>
+						<li><button type="button" class="btn btn-danger " onclick="showModal()">保存</button></li>
+					</div>
+
+					<!-- <div class="component"> 
+						<img class="resize-image" src="./img/custom.png" alt="image for resizing" id="resize-image">
+					</div> -->
+				</div>	
+			</div>
+
+		</div>
+
+			<div class="foot" id="foot">
+				<div class="am-scrollable-horizontal scroll">
+					<table class="am-table am-table-bordered am-table-striped am-text-nowrap">
+						
+							<input id="file" type="file" style='display: none;'>				
+						　　<!--用for属性绑定file控件--> 　　
+						　　<label for="file" class="upload">　　 				　　　　　　
+						　　　　<img src="./img/custom.png" alt="" class="am-fl am-img-responsive"> 　　				　　
+						　　</label> 
+
+						<ul class="footImage">
+							<li class="images">
+								<img src="img/pic1.png" class="am-img-responsive" />
+							</li>
+						</ul>			
+					</table>
+				</div>
+			</div>
+
+			<div class="mymodal" id="mymodal" style=" display: none;">
+				<div class="modal-tit">
+					<p>订单提交成功</p>
+					<img src="./img/success.png" alt="">
+				</div>
+				<div class="modal-num">
+					<p>订单号：<span id="text"></span></p>
+					<textarea id="input"></textarea>
+					<button type="button" class="btn btn-danger btn-sm" onclick="copy()">复制订单号</button>
+				</div>
+				<div class="modal-foot">
+					<button type="button" class="btn btn-danger btn-lg" >去付款</button>
+					<button type="button" class="btn btn-info btn-lg" onclick="hideModal()">再定制一张</button>
+				</div>
+
+			</div>
+
+		<script src="./js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="css/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/amazeui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/canvas.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="./js/component.js"></script> -->
+		
+		<script>
+			 
+		</script>
+	</body>
+</html>
